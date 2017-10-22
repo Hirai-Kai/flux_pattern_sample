@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.Date;
+
 import jp.co.null_cloud.flux_pattern_sample.databinding.ActivityMainBinding;
+import jp.co.null_cloud.flux_pattern_sample.models.dto.TodoData;
 import jp.co.null_cloud.flux_pattern_sample.ui.fragments.MainFragment;
 
 /**
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         //ボタンタップイベント
         mBinding.floatingActionButton.setOnClickListener(view -> {
-
+            mFragment.addTodo(new TodoData("todoData", new Date(System.currentTimeMillis())));
         });
     }
 

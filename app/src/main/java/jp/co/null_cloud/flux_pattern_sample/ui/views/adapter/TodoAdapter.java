@@ -45,6 +45,11 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
         if (null != mDataList && position < mDataList.size()) {
             //念のためnullチェックと位置のチェック
             holder.setTodo(mDataList.get(position));
+
+            //ボタンタップ時のイベントを設定する
+            holder.getBinding().removeTodoData.setOnClickListener(v -> {
+                removeItem(position);
+            });
         }
     }
 
@@ -76,6 +81,16 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
         notifyDataSetChanged();
     }
 
+    public void removeItem(int index) {
+        if (index < 0 || mDataList.size() - 1 < index) {
+            return;
+        }
+
+        mDataList.remove(index);
+        notifyItemRemoved(index);
+        notifyItemRangeChanged(index, mDataList.size());
+    }
+
     /**
      * リストに表示するViewHolder
      */
@@ -92,6 +107,15 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
         TodoHolder(View itemView) {
             super(itemView);
             mBinding = HolderTodoBinding.bind(itemView);
+        }
+
+        /**
+         * Viewを取得する
+         *
+         * @return View
+         */
+        public HolderTodoBinding getBinding() {
+            return mBinding;
         }
 
         /**

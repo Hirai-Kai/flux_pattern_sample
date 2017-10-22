@@ -30,7 +30,7 @@ public class TodoData {
      */
     public TodoData(@NonNull String todo, @NonNull Date date) {
         mTodo = todo;
-        mDate = date;
+        mDate = (Date) date.clone();
     }
 
     @NonNull
@@ -40,7 +40,7 @@ public class TodoData {
 
     @NonNull
     public Date getDate() {
-        return mDate;
+        return (Date) mDate.clone();
     }
 
     public void setTodo(@NonNull String todo) {
@@ -48,7 +48,7 @@ public class TodoData {
     }
 
     public void setDate(@NonNull Date date) {
-        mDate = date;
+        mDate = (Date) date.clone();
     }
 
     /**
