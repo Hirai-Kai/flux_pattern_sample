@@ -1,6 +1,5 @@
 package jp.co.null_cloud.flux_pattern_sample.ui.views.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import io.reactivex.annotations.NonNull;
 import jp.co.null_cloud.flux_pattern_sample.R;
 import jp.co.null_cloud.flux_pattern_sample.databinding.HolderTodoBinding;
 import jp.co.null_cloud.flux_pattern_sample.models.dto.TodoData;
+import jp.co.null_cloud.flux_pattern_sample.models.view_model.TodoViewModel;
 
 /**
  * 予定一覧を表示するAdapter
@@ -20,19 +20,13 @@ import jp.co.null_cloud.flux_pattern_sample.models.dto.TodoData;
 
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
 
-    /** Context */
-    private final Context mContext;
-
     /** 予定一覧 */
     private List<TodoData> mDataList;
 
     /**
      * Constructor
-     *
-     * @param context Context
      */
-    public TodoAdapter(@NonNull Context context) {
-        mContext = context;
+    public TodoAdapter() {
     }
 
     @Override
@@ -59,15 +53,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
     }
 
     /**
-     * 表示する予定を設定する
-     *
-     * @param item 予定一覧
-     */
-    public void setItem(@NonNull List<TodoData> item) {
-        mDataList = new ArrayList<>(item);
-    }
-
-    /**
      * 予定を追加する
      *
      * @param todoData 予定
@@ -81,6 +66,11 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
         notifyDataSetChanged();
     }
 
+    /**
+     * 予定を削除する
+     *
+     * @param index 削除する予定のポジション
+     */
     public void removeItem(int index) {
         if (index < 0 || mDataList.size() - 1 < index) {
             return;
@@ -124,7 +114,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
          * @param todo 予定
          */
         void setTodo(@NonNull TodoData todo) {
-            mBinding.setTodoData(todo);
+            TodoViewModel model = new TodoViewModel();
+            model.setTodo(todo.getTodo());
+            model.setDate(todo.getSimpleDate());
+            mBinding.setViewModel(model);
         }
 
         /**
