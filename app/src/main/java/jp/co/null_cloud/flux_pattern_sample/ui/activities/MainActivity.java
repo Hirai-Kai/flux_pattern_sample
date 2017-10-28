@@ -1,13 +1,19 @@
 package jp.co.null_cloud.flux_pattern_sample.ui.activities;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
+import jp.co.null_cloud.flux_pattern_sample.R;
 import jp.co.null_cloud.flux_pattern_sample.databinding.ActivityMainBinding;
 import jp.co.null_cloud.flux_pattern_sample.models.dto.TodoData;
+import jp.co.null_cloud.flux_pattern_sample.ui.application.FluxPatternSample;
+import jp.co.null_cloud.flux_pattern_sample.ui.component.MainActionCreator;
 import jp.co.null_cloud.flux_pattern_sample.ui.fragments.MainFragment;
 
 /**
@@ -24,11 +30,16 @@ public class MainActivity extends AppCompatActivity {
     /** 表示するFragment */
     private final MainFragment mFragment = MainFragment.newInstance();
 
+    /** ActionCreator */
+    @Inject
+    MainActionCreator mActionCreator;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(mBinding.getRoot());
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        mActionCreator = ((FluxPatternSample) getApplication()).getAppComponent().mainActionCreator();
 
         //Fragmentを表示する
         getSupportFragmentManager().beginTransaction()
@@ -37,17 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         //ボタンタップイベント
         mBinding.floatingActionButton.setOnClickListener(view -> {
-            mFragment.addTodo(new TodoData("todoData", new Date(System.currentTimeMillis())));
+            mActionCreator.addTodo(new TodoData("todoData", new Date(System.currentTimeMillis())));
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 }

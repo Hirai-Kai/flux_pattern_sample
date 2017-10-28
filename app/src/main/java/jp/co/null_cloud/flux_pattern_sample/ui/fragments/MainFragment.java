@@ -1,7 +1,6 @@
 package jp.co.null_cloud.flux_pattern_sample.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import jp.co.null_cloud.flux_pattern_sample.databinding.FragmentMainBinding;
-import jp.co.null_cloud.flux_pattern_sample.models.dto.TodoData;
+import jp.co.null_cloud.flux_pattern_sample.ui.application.FluxPatternSample;
+import jp.co.null_cloud.flux_pattern_sample.ui.component.MainStore;
 import jp.co.null_cloud.flux_pattern_sample.ui.views.adapter.TodoAdapter;
 
 /**
@@ -23,7 +25,12 @@ public class MainFragment extends Fragment {
     private FragmentMainBinding mBinding;
 
     /** Adapter */
-    private TodoAdapter mTodoAdapter;
+    @Inject
+    TodoAdapter mTodoAdapter;
+
+    /** Store */
+    @Inject
+    MainStore mMainStore;
 
     /**
      * インスタンスを生成する
@@ -40,7 +47,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTodoAdapter = new TodoAdapter(getContext());
+
+        //AdapterとStoreを生成しておく
+        mTodoAdapter = ((FluxPatternSample) getActivity().getApplication()).getAppComponent().todoAdapter();
+        mMainStore = ((FluxPatternSample) getActivity().getApplication()).getAppComponent().mainStore();
     }
 
     @Nullable
@@ -54,20 +64,5 @@ public class MainFragment extends Fragment {
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return mBinding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    //todo:test
-    public void addTodo(@NonNull TodoData todoData) {
-        mTodoAdapter.addItem(todoData);
     }
 }
